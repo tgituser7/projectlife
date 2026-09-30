@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #eef6ff;
+  --color-brand-100: #d9eaff;
+  --color-brand-500: #3b82f6;
+  --color-brand-600: #2563eb;
+  --color-brand-700: #1d4ed8;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --muted: #64748b;
+  --card: #f8fafc;
+  --border: #e2e8f0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0b1120;
+    --foreground: #e2e8f0;
+    --muted: #94a3b8;
+    --card: #111a2e;
+    --border: #1e293b;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* ---------- Film hero (home, first section) ---------- */
+
+.film-hero .poster-clip {
+  /* fixed (10% of the full 60vh) so bottoms stay level while posters grow in */
+  clip-path: inset(6vh 0 6vh 0);
+  transition: clip-path 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.film-hero .poster:hover .poster-clip,
+.film-hero .poster:focus-visible .poster-clip,
+.film-hero .poster-clip.is-open {
+  clip-path: inset(0 0 0 0);
+}
+.film-hero .poster-img {
+  filter: grayscale(1) brightness(0.88);
+  transition: filter 0.6s ease;
+}
+.film-hero .poster:hover .poster-img,
+.film-hero .poster:focus-visible .poster-img,
+.film-hero .poster-clip.is-open .poster-img {
+  filter: grayscale(0) brightness(1.05) contrast(1.05);
+}
+.film-hero .poster-color {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.film-hero .poster:hover .poster-color,
+.film-hero .poster:focus-visible .poster-color,
+.film-hero .poster-clip.is-open .poster-color {
+  opacity: 1;
+}
+/* Once a poster is chosen, the others dim while it stays bright */
+.film-hero.is-covered .poster-clip:not(.is-open) .poster-img {
+  filter: grayscale(1) brightness(0.35);
+}
+.film-hero .scanline {
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 2px;
+  background: #ff5a1f;
+  opacity: 0;
+  transform: scaleX(0);
+  pointer-events: none;
+}
+.film-hero .poster:hover .scanline {
+  animation: scan 0.7s ease-out;
+}
+
+@keyframes row-in { from { transform: translateX(55vw); } to { transform: translateX(0); } }
+/* Poster starts short and grows taller from its bottom edge; the image scales up with it */
+@keyframes grow-up {
+  from { height: 7vh; opacity: 0; }
+  15% { opacity: 1; }
+  to { height: 60vh; opacity: 1; }
+}
+@keyframes letter-rise { from { transform: translateY(105%); } to { transform: translateY(0); } }
+@keyframes logo-in { from { transform: rotate(-28deg) scale(0.7); } to { transform: none; } }
+@keyframes scan {
+  0% { opacity: 1; transform: scaleX(0); }
+  50% { opacity: 1; transform: scaleX(1); }
+  100% { opacity: 0; transform: scaleX(1) translateY(-40px); }
+}
+@keyframes line-down { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes expand {
+  0% { clip-path: inset(0 49.8% 0 49.8%); }
+  30% { clip-path: inset(0 44% 0 44%); }
+  62% { clip-path: inset(0 22% 0 22%); }
+  100% { clip-path: inset(0 0 0 0); }
+}
+@keyframes collapse {
+  from { clip-path: inset(0 0 0 0); }
+  to { clip-path: inset(0 50% 0 50%); }
+}
+@keyframes zoom-settle { from { transform: scale(1.45); } to { transform: scale(1); } }
+/* Small ▼ dot → mid-size → full play button */
+@keyframes orb-grow {
+  0% { transform: scale(0.2); opacity: 0; }
+  8% { opacity: 1; }
+  35% { transform: scale(0.4); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes icon-out { 0%, 45% { opacity: 1; } 60%, 100% { opacity: 0; } }
+@keyframes icon-in { 0%, 50% { opacity: 0; } 70%, 100% { opacity: 1; } }
+@keyframes side-in { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .film-hero *,
+  .film-hero *::before,
+  .film-hero *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
